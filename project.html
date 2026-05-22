@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details - Ashish NR</title>
+    <meta name="description" content="Editorial project detail page of Ashish NR portfolio">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+    <!-- Sticky Navigation Bar -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <div class="nav-left">
+                <a href="index.html" class="nav-brand">ASHISH NR</a>
+            </div>
+            <div class="nav-center">
+                <!-- Kept empty on detail pages to maintain focus on content -->
+            </div>
+            <div class="nav-right">
+                <a href="https://www.instagram.com/ash.ishnr/" target="_blank" class="social-link">IN</a>
+                <span class="nav-slash">/</span>
+                <a href="https://www.linkedin.com/in/ashish-nr-889770b6/" target="_blank" class="social-link">LI</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Editorial Project Page Content -->
+    <main class="container">
+        <!-- Asymmetrical Column Grid Layout (Matches Framer) -->
+        <section class="project-header-grid">
+            <!-- Column 1: Floating Title Side Column -->
+            <div class="project-col project-col-left">
+                <h1 id="project-title" class="project-fixed-title">Project Title</h1>
+            </div>
+            
+            <!-- Column 2: Detailed Description Column -->
+            <div class="project-col project-col-middle">
+                <p id="project-description">
+                    Loading project description...
+                </p>
+            </div>
+            
+            <!-- Column 3: Timeline & Meta Data List Column -->
+            <div class="project-col project-col-right">
+                <div id="project-meta-list">
+                    <!-- Loaded dynamically by project.js -->
+                    <div class="meta-item">
+                        <span class="meta-label">Date:</span>
+                        <span class="meta-value">...</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stacked Project Media Images (Aligned with middle column) -->
+        <section id="project-media-list" class="project-media-container">
+            <!-- Populated dynamically by project.js -->
+        </section>
+    </main>
+
+    <!-- Sticky Footer -->
+    <footer>
+        <div class="footer-container">
+            <span>Ashish NR / 2025</span>
+            <a href="mailto:ashishnremash@gmail.com" class="footer-email">ashishnremash@gmail.com</a>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="assets/js/project.js"></script>
+</body>
+</html>

@@ -1,0 +1,449 @@
+/* Import IBM Plex Mono from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+
+/* Global Resets and Design Tokens */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    background-color: #000000;
+    color: #ffffff;
+    font-family: "IBM Plex Mono", monospace;
+    overflow-x: hidden;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* Base Layout Constraints - Edge to Edge */
+.container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+/* Top Sticky Navigation Bar */
+.top-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 57px;
+    background-color: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 1000;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+.nav-left .nav-brand {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    cursor: pointer;
+}
+
+/* Custom Minimal Interactive Filter Bar inside Nav */
+.nav-center {
+    display: flex;
+    align-items: center;
+}
+
+.filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 0px;
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    border: none;
+}
+
+.filter-btn {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.4);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    padding: 2px 0px;
+}
+
+.filter-btn:hover {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.filter-btn.active {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.filter-separator, .nav-slash {
+    color: rgba(255, 255, 255, 0.2);
+    font-size: 13px;
+    font-weight: 300;
+    user-select: none;
+    margin: 0 6px; /* Controlled tight spacing around / */
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 0px;
+    font-size: 13px;
+}
+
+.social-link {
+    color: rgba(255, 255, 255, 0.4);
+    transition: color 0.2s ease;
+    padding: 2px 0px;
+}
+
+.social-link:hover {
+    color: #ffffff;
+}
+
+/* 3-Column Masonry Layout Engine */
+.masonry-container {
+    padding-top: 87px; /* Nav height + margin */
+    padding-bottom: 60px;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.masonry-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0; /* Prevents overflow in flexbox child */
+}
+
+/* Portfolio Card Design */
+.card-item {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background-color: #0d0d0d;
+    cursor: pointer;
+    display: block;
+    aspect-ratio: auto;
+    border-radius: 8px;
+}
+
+.card-media {
+    width: 100%;
+    display: block;
+    height: auto;
+    object-fit: cover;
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-item:hover .card-media {
+    opacity: 0.8;
+}
+
+/* Dimming Overlay + Bottom-Right Text Title */
+.card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding: 15px;
+    opacity: 0;
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 2;
+}
+
+.card-item:hover .card-overlay {
+    opacity: 1;
+}
+
+.card-title {
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    margin: 0;
+}
+
+/* Main Footer Styling */
+footer {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    background-color: #000000;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    z-index: 900;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 40px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.footer-email {
+    color: rgba(255, 255, 255, 0.4);
+    transition: color 0.2s ease;
+}
+
+.footer-email:hover {
+    color: #ffffff;
+}
+
+/* Maximized Illustration Lightbox Modal styling */
+.lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.98);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.lightbox.active {
+    display: flex;
+    opacity: 1;
+}
+
+.lightbox-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 85%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.lightbox-image {
+    max-width: 100%;
+    max-height: 80vh;
+    object-fit: contain;
+    box-shadow: 0 10px 45px rgba(0, 0, 0, 0.9);
+    user-select: none;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 32px;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 2200;
+}
+
+.lightbox-close:hover {
+    opacity: 1;
+    transform: scale(1.08);
+}
+
+.lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 40px;
+    cursor: pointer;
+    opacity: 0.3;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    padding: 30px 20px;
+    z-index: 2100;
+}
+
+.lightbox-nav:hover {
+    opacity: 0.9;
+    transform: translateY(-50%) scale(1.05);
+}
+
+.lightbox-prev {
+    left: 10px;
+}
+
+.lightbox-next {
+    right: 10px;
+}
+
+.lightbox-caption {
+    margin-top: 15px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+}
+
+/* Editorial Detailed Project Page Layout */
+.project-header-grid {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    padding-top: 97px;
+    padding-bottom: 40px;
+}
+
+.project-col {
+    width: calc((100% - 40px) / 3);
+    flex-shrink: 0;
+}
+
+.project-col-left {
+    position: relative;
+}
+
+.project-fixed-title {
+    position: sticky;
+    top: 97px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #ffffff;
+    letter-spacing: -0.01em;
+}
+
+.project-col-middle {
+    color: #ffffff;
+    font-size: 15px;
+    line-height: 1.45;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+}
+
+.project-col-right {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    font-size: 13px;
+    padding-left: 20px;
+}
+
+.meta-item {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.4;
+}
+
+.meta-label {
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 400;
+    text-transform: capitalize;
+}
+
+.meta-value {
+    color: #ffffff;
+    margin-top: 2px;
+}
+
+.project-media-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-bottom: 80px;
+}
+
+.project-media-item {
+    margin-left: calc(((100% - 40px) / 3) + 20px); /* Column 1 width + gap */
+    width: calc(2 * ((100% - 40px) / 3) + 20px);   /* Column 2 + Column 3 + gap */
+    display: block;
+    height: auto;
+    object-fit: cover;
+    background-color: #0a0a0a;
+}
+
+/* Responsive Rules */
+@media (max-width: 1024px) {
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    .nav-container, .footer-container {
+        padding: 0 15px;
+    }
+    
+    .masonry-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .masonry-column {
+        width: 100%;
+        gap: 15px;
+    }
+    
+    /* Project details stack on tablets/mobile */
+    .project-header-grid {
+        flex-direction: column;
+        padding-top: 80px;
+        gap: 24px;
+    }
+    
+    .project-col {
+        width: 100%;
+    }
+    
+    .project-col-right {
+        padding-left: 0;
+    }
+    
+    .project-fixed-title {
+        position: relative;
+        top: 0;
+        font-size: 20px;
+    }
+    
+    .project-media-item {
+        margin-left: 0;
+        width: 100%;
+    }
+}

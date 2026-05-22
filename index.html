@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ashish NR</title>
+    <meta name="description" content="Portfolio of Ashish NR - Multidisciplinary Graphic Designer">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+    <!-- Top Sticky Header -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <div class="nav-left">
+                <a href="index.html" class="nav-brand">ASHISH NR</a>
+            </div>
+            <div class="nav-center">
+                <div class="filter-bar">
+                    <button id="filter-all" class="filter-btn active">ALL</button>
+                    <span class="filter-separator">/</span>
+                    <button id="filter-design" class="filter-btn">DESIGN</button>
+                    <span class="filter-separator">/</span>
+                    <button id="filter-art" class="filter-btn">ART</button>
+                </div>
+            </div>
+            <div class="nav-right">
+                <a href="https://www.instagram.com/ash.ishnr/" target="_blank" class="social-link">IN</a>
+                <span class="nav-slash">/</span>
+                <a href="https://www.linkedin.com/in/ashish-nr-889770b6/" target="_blank" class="social-link">LI</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Masonry Grid Container -->
+    <main class="container masonry-container">
+        <div id="col-1" class="masonry-column">
+            <!-- Dynamically populated by main.js -->
+        </div>
+        <div id="col-2" class="masonry-column">
+            <!-- Dynamically populated by main.js -->
+        </div>
+        <div id="col-3" class="masonry-column">
+            <!-- Dynamically populated by main.js -->
+        </div>
+    </main>
+
+    <!-- Cycle Lightbox Modal for Art/Illustrations -->
+    <div id="lightbox" class="lightbox">
+        <button id="lightbox-close" class="lightbox-close" aria-label="Close lightbox">&times;</button>
+        <button id="lightbox-prev" class="lightbox-nav lightbox-prev" aria-label="Previous image">&#8249;</button>
+        
+        <div class="lightbox-content">
+            <img id="lightbox-img" class="lightbox-image" src="" alt="Maximized illustration">
+            <div id="lightbox-caption" class="lightbox-caption">Illustration Title</div>
+        </div>
+        
+        <button id="lightbox-next" class="lightbox-nav lightbox-next" aria-label="Next image">&#8250;</button>
+    </div>
+
+    <!-- Sticky Footer -->
+    <footer>
+        <div class="footer-container">
+            <span>Ashish NR / 2025</span>
+            <a href="mailto:ashishnremash@gmail.com" class="footer-email">ashishnremash@gmail.com</a>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
