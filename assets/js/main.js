@@ -8,9 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let activeIllustrations = [];
     let currentLightboxIdx = -1;
     
-    const col1 = document.getElementById("col-1");
-    const col2 = document.getElementById("col-2");
-    const col3 = document.getElementById("col-3");
+    const masonryGrid = document.getElementById("masonry-grid");
     
     const filterBtnAll = document.getElementById("filter-all");
     const filterBtnDesign = document.getElementById("filter-design");
@@ -23,13 +21,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const lightboxPrev = document.getElementById("lightbox-prev");
     const lightboxNext = document.getElementById("lightbox-next");
 
-    // Stable hash function for "random" column allocation to maintain visual layout stability
+    let lastColumnCount = 0;
+
+    // Dynamic Viewport Breakpoint Resolver
+    function getDesiredColumns() {
+        const width = window.innerWidth;
+        if (width >= 1024) return 4;
+        if (width >= 768) return 3;
+        return 1;
+    }
+
+    // Stable hash function for "random" column allocation to maintain visual layout stability across 4 columns
     function getStableColumn(slug) {
         let hash = 0;
         for (let i = 0; i < slug.length; i++) {
             hash = slug.charCodeAt(i) + ((hash << 5) - hash);
         }
-        return Math.abs(hash % 3) + 1; // Returns 1, 2, or 3
+        return Math.abs(hash % 4) + 1; // Returns 1, 2, 3, or 4
     }
 
     // Main loading routine
@@ -54,7 +62,13 @@ document.addEventListener("DOMContentLoaded", () => {
             const loaded = await Promise.all(fetchPromises);
             allProjects = loaded.filter(p => p !== null);
             
-            // Initial render
+            // Assign global order index from projects.json sequence
+            allProjects.forEach(project => {
+                project.globalIndex = projectSlugs.indexOf(project.slug);
+            });
+            
+            // Initialize active columns count and render
+            lastColumnCount = getDesiredColumns();
             renderGrid();
             
         } catch (e) {
@@ -62,12 +76,25 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Grid rendering engine with sorting and column distribution
+    // Grid rendering engine with dynamic column distribution
     function renderGrid() {
-        // Clear columns
-        col1.innerHTML = "";
-        col2.innerHTML = "";
-        col3.innerHTML = "";
+        const N = getDesiredColumns();
+        
+        // Empty container
+        masonryGrid.innerHTML = "";
+        
+        // Dynamically create N column elements
+        const columnsElements = [];
+        const columnsLists = [];
+        for (let i = 1; i <= N; i++) {
+            const colDiv = document.createElement("div");
+            colDiv.className = "masonry-column";
+            colDiv.id = `col-${i}`;
+            masonryGrid.appendChild(colDiv);
+            
+            columnsElements.push(colDiv);
+            columnsLists.push([]);
+        }
         
         // Filter projects
         const filteredProjects = allProjects.filter(project => {
@@ -75,48 +102,47 @@ document.addEventListener("DOMContentLoaded", () => {
             return project.category === currentFilter;
         });
 
-        // Group into lists for columns 1, 2, and 3
-        const c1List = [];
-        const c2List = [];
-        const c3List = [];
-
+        // Distribute items across the active N columns
         filteredProjects.forEach(project => {
             let col = parseInt(project.column);
             
             // If random or auto-allocated
-            if (isNaN(col) || col < 1 || col > 3 || project.column === "random") {
+            if (isNaN(col) || col < 1 || col > 4 || project.column === "random") {
                 col = getStableColumn(project.slug);
             }
             
-            if (col === 1) c1List.push(project);
-            else if (col === 2) c2List.push(project);
-            else c3List.push(project);
+            // Map saved column 1-4 into index of N columns
+            let targetColIndex = 0;
+            if (N === 4) {
+                targetColIndex = col - 1;
+            } else if (N === 3) {
+                targetColIndex = (col - 1) % 3;
+            } else { // N === 1
+                targetColIndex = 0;
+            }
+            
+            columnsLists[targetColIndex].push(project);
         });
 
-        // Sort items in each column by their position property (ascending)
+        // Sort items in each column by position property (or global index on mobile)
         const sortByPosition = (a, b) => {
+            if (N === 1) {
+                return a.globalIndex - b.globalIndex;
+            }
             const posA = a.position !== undefined ? parseInt(a.position) : 999;
             const posB = b.position !== undefined ? parseInt(b.position) : 999;
             return posA - posB;
         };
 
-        c1List.sort(sortByPosition);
-        c2List.sort(sortByPosition);
-        c3List.sort(sortByPosition);
-
-        // Render card elements
-        renderColumn(c1List, col1);
-        renderColumn(c2List, col2);
-        renderColumn(c3List, col3);
+        // Render card elements inside each column
+        columnsLists.forEach((list, index) => {
+            list.sort(sortByPosition);
+            renderColumn(list, columnsElements[index]);
+        });
         
-        // Update illustrations queue for lightbox cycling in the active display order
-        // Flatten grid items to create the sequential cycle list
-        activeIllustrations = [];
-        // Interleave or list sequentially? Sequentially is great.
-        // Let's grab all active projects with 'art' category
+        // Update illustrations queue for lightbox cycling in the global display order
         activeIllustrations = filteredProjects.filter(p => p.category === "art");
-        // Sort them for clean cycling
-        activeIllustrations.sort(sortByPosition);
+        activeIllustrations.sort((a, b) => a.globalIndex - b.globalIndex);
     }
 
     function renderColumn(projectsList, columnElement) {
@@ -248,6 +274,20 @@ document.addEventListener("DOMContentLoaded", () => {
         } else if (e.key === "ArrowRight") {
             navigateLightbox(1);
         }
+    });
+
+    // Dynamic resize hook
+    function checkAndResizeGrid() {
+        const cols = getDesiredColumns();
+        if (cols !== lastColumnCount) {
+            lastColumnCount = cols;
+            renderGrid();
+        }
+    }
+
+    window.addEventListener("resize", () => {
+        clearTimeout(window.resizeTimer);
+        window.resizeTimer = setTimeout(checkAndResizeGrid, 150);
     });
 
     // Start execution

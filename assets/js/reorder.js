@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const col1Bucket = document.getElementById("drag-col-1");
     const col2Bucket = document.getElementById("drag-col-2");
     const col3Bucket = document.getElementById("drag-col-3");
+    const col4Bucket = document.getElementById("drag-col-4");
     
     const saveBtn = document.getElementById("save-btn");
     const statusIndicator = document.getElementById("save-status");
@@ -258,21 +259,24 @@ document.addEventListener("DOMContentLoaded", () => {
         col1Bucket.innerHTML = "";
         col2Bucket.innerHTML = "";
         col3Bucket.innerHTML = "";
+        col4Bucket.innerHTML = "";
 
         const c1List = [];
         const c2List = [];
         const c3List = [];
+        const c4List = [];
 
         // Distribute into lists based on column
         allProjects.forEach(project => {
             let col = parseInt(project.column);
-            if (isNaN(col) || col < 1 || col > 3) {
+            if (isNaN(col) || col < 1 || col > 4) {
                 col = 1; // Default fallback
             }
 
             if (col === 1) c1List.push(project);
             else if (col === 2) c2List.push(project);
-            else c3List.push(project);
+            else if (col === 3) c3List.push(project);
+            else c4List.push(project);
         });
 
         // Sort each column list by their position property (ascending)
@@ -285,11 +289,13 @@ document.addEventListener("DOMContentLoaded", () => {
         c1List.sort(sortByPosition);
         c2List.sort(sortByPosition);
         c3List.sort(sortByPosition);
+        c4List.sort(sortByPosition);
 
         // Render card elements
         c1List.forEach(p => renderCard(p, col1Bucket));
         c2List.forEach(p => renderCard(p, col2Bucket));
         c3List.forEach(p => renderCard(p, col3Bucket));
+        c4List.forEach(p => renderCard(p, col4Bucket));
 
         setupDragAndDrop();
     }
@@ -394,7 +400,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Dynamically update subtitles inside cards to reflect new dragged columns
     function updateCardsVisualMetadata() {
-        [col1Bucket, col2Bucket, col3Bucket].forEach((bucket, index) => {
+        [col1Bucket, col2Bucket, col3Bucket, col4Bucket].forEach((bucket, index) => {
             const colNum = index + 1;
             const cards = bucket.querySelectorAll(".drag-card-item");
             
@@ -457,6 +463,16 @@ document.addEventListener("DOMContentLoaded", () => {
             payload.push({
                 slug: card.getAttribute("data-slug"),
                 column: 3,
+                position: index + 1
+            });
+        });
+
+        // Scrape Column 4
+        const c4Cards = col4Bucket.querySelectorAll(".drag-card-item");
+        c4Cards.forEach((card, index) => {
+            payload.push({
+                slug: card.getAttribute("data-slug"),
+                column: 4,
                 position: index + 1
             });
         });
