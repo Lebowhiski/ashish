@@ -185,11 +185,16 @@ a:hover {
     vertical-align: middle;
 }
 
-.filter-glyph {
+.filter-glyph,
+.logo-glyph {
     width: 8px;
     height: 8px;
     display: inline-block;
     vertical-align: middle;
+}
+
+.logo-glyph {
+    margin-left: 6px;
 }
 
 .nav-right {
@@ -630,6 +635,10 @@ footer {
     .filter-separator,
     .nav-slash {
         margin: 0 4px;
+    }
+
+    .logo-glyph {
+        margin-left: 4px;
     }
 
     .project-header-grid {
