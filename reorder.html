@@ -108,10 +108,14 @@
                         </div>
                     </div>
 
-                    <!-- Images -->
+                    <!-- Images Dropzone -->
                     <div class="form-group">
-                        <label for="p-images">IMAGE FILENAMES (COMMA SEPARATED)</label>
-                        <input type="text" id="p-images" required placeholder="e.g., 1.jpg, 2.jpg, 3.jpg">
+                        <label>PROJECT IMAGES (DRAG & DROP)</label>
+                        <div id="image-dropzone" class="image-dropzone">
+                            <span class="dropzone-text">DRAG & DROP IMAGES HERE<br><span style="font-size: 8px; opacity: 0.5;">OR CLICK TO BROWSE</span></span>
+                            <input type="file" id="p-image-files" multiple accept="image/*" style="display:none;">
+                        </div>
+                        <div id="dropped-files-list" class="dropped-files-list"></div>
                     </div>
 
                     <!-- Description -->

@@ -128,7 +128,7 @@ class CMSHandler(http.server.SimpleHTTPRequestHandler):
             role = payload.get('role', 'Designer').strip()
             collaborators = payload.get('collaborators', 'None').strip()
             description = payload.get('description', '').strip()
-            images = payload.get('images', [])
+            raw_images = payload.get('images', [])
 
             if not slug:
                 raise ValueError("Project slug is required")
@@ -140,6 +140,32 @@ class CMSHandler(http.server.SimpleHTTPRequestHandler):
             os.makedirs(project_dir, exist_ok=True)
             print(f"✔ Created project directory: {project_dir}")
 
+            # Decode and save image files on server disk
+            images_list = []
+            for img in raw_images:
+                if isinstance(img, dict) and 'name' in img and 'content' in img:
+                    img_name = img['name']
+                    img_content = img['content']
+                    
+                    # Extract base64 part
+                    if ',' in img_content:
+                        header, base64_data = img_content.split(',', 1)
+                    else:
+                        base64_data = img_content
+                    
+                    import base64
+                    try:
+                        file_bytes = base64.b64decode(base64_data)
+                        img_path = os.path.join(project_dir, img_name)
+                        with open(img_path, 'wb') as img_f:
+                            img_f.write(file_bytes)
+                        print(f"✔ Saved dropped image file: {img_path}")
+                        images_list.append(img_name)
+                    except Exception as img_err:
+                        print(f"❌ Failed to decode/save image {img_name}: {img_err}")
+                elif isinstance(img, str):
+                    images_list.append(img)
+
             metadata = {
                 "title": title,
                 "category": category,
@@ -150,7 +176,7 @@ class CMSHandler(http.server.SimpleHTTPRequestHandler):
                 "role": role,
                 "collaborators": collaborators,
                 "description": description,
-                "images": images
+                "images": images_list
             }
 
             meta_path = os.path.join(project_dir, "metadata.json")

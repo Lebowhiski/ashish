@@ -169,6 +169,89 @@
     background-color: rgba(239, 68, 68, 0.05);
 }
 
+/* Custom Image Drag and Drop dropzone styling */
+.image-dropzone {
+    border: 0.75px dashed rgba(255, 255, 255, 0.25);
+    background-color: rgba(255, 255, 255, 0.01);
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s var(--easing), background-color 0.2s var(--easing);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80px;
+    margin-top: 4px;
+}
+
+.image-dropzone.drag-over {
+    border-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.06);
+}
+
+.dropzone-text {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: 0.05em;
+    line-height: 1.4;
+    user-select: none;
+}
+
+.dropped-files-list {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.dropped-file-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 0.75px solid rgba(255, 255, 255, 0.1);
+    padding: 6px 10px;
+    font-size: 10px;
+    color: #ffffff;
+    font-family: 'DM Mono', monospace;
+}
+
+.dropped-file-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.dropped-file-preview {
+    width: 24px;
+    height: 24px;
+    object-fit: cover;
+    border: 0.75px solid rgba(255, 255, 255, 0.2);
+    flex-shrink: 0;
+}
+
+.dropped-file-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.remove-file-btn {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.4);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: color 0.2s var(--easing);
+    padding: 0 4px;
+}
+
+.remove-file-btn:hover {
+    color: #ef4444;
+}
+
 /* Grid representation headers */
 .columns-header-grid {
     display: flex;

@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const saveBtn = document.getElementById("save-btn");
     const statusIndicator = document.getElementById("save-status");
 
-    // Form DOM Elements
+    // Form DOM Elements & State
     const form = document.getElementById("cms-form");
     const titleInput = document.getElementById("p-title");
     const slugInput = document.getElementById("p-slug");
@@ -22,6 +22,87 @@ document.addEventListener("DOMContentLoaded", () => {
     const feedbackBox = document.getElementById("feedback-box");
     const feedbackMsg = document.getElementById("feedback-message");
     const createBtn = document.getElementById("create-btn");
+
+    // Dropzone Elements & State
+    const dropzone = document.getElementById("image-dropzone");
+    const fileInput = document.getElementById("p-image-files");
+    const filesList = document.getElementById("dropped-files-list");
+    let uploadedFiles = []; // State array of objects: { name, base64, fileObject }
+
+    // Click dropzone to trigger hidden file selector
+    dropzone.addEventListener("click", () => fileInput.click());
+
+    fileInput.addEventListener("change", (e) => {
+        handleSelectedFiles(e.target.files);
+        fileInput.value = ""; // Clear input for future selections
+    });
+
+    // Drag over styling triggers
+    dropzone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dropzone.classList.add("drag-over");
+    });
+
+    dropzone.addEventListener("dragleave", () => {
+        dropzone.classList.remove("drag-over");
+    });
+
+    dropzone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dropzone.classList.remove("drag-over");
+        handleSelectedFiles(e.dataTransfer.files);
+    });
+
+    // Process files selected/dropped
+    function handleSelectedFiles(files) {
+        const imageFiles = [...files].filter(f => f.type.startsWith("image/"));
+        
+        imageFiles.forEach(file => {
+            // Avoid duplicate file names
+            if (uploadedFiles.some(existing => existing.name === file.name)) {
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                uploadedFiles.push({
+                    name: file.name,
+                    base64: e.target.result,
+                    fileObject: file
+                });
+                renderDroppedFiles();
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // Render Dropped Files previews
+    function renderDroppedFiles() {
+        filesList.innerHTML = "";
+        
+        uploadedFiles.forEach((file, index) => {
+            const row = document.createElement("div");
+            row.className = "dropped-file-row";
+            
+            row.innerHTML = `
+                <div class="dropped-file-info">
+                    <img class="dropped-file-preview" src="${file.base64}" alt="${file.name}">
+                    <span class="dropped-file-name" title="${file.name}">${file.name}</span>
+                </div>
+                <button type="button" class="remove-file-btn" data-index="${index}">&times;</button>
+            `;
+            
+            // Delete button handler
+            row.querySelector(".remove-file-btn").addEventListener("click", (e) => {
+                e.stopPropagation();
+                const idx = parseInt(e.target.getAttribute("data-index"));
+                uploadedFiles.splice(idx, 1);
+                renderDroppedFiles();
+            });
+            
+            filesList.appendChild(row);
+        });
+    }
 
     // Real-time Title Slugifier
     titleInput.addEventListener("input", () => {
@@ -51,8 +132,21 @@ document.addEventListener("DOMContentLoaded", () => {
         const column = parseInt(document.getElementById("p-column").value);
         const position = parseInt(document.getElementById("p-position").value);
         const desc = document.getElementById("p-description").value.trim();
-        const imagesStr = document.getElementById("p-images").value;
-        const images = imagesStr.split(",").map(i => i.trim()).filter(i => i.length > 0);
+        
+        // Ensure at least one image is uploaded
+        if (uploadedFiles.length === 0) {
+            feedbackBox.style.display = "block";
+            feedbackBox.className = "feedback-box error";
+            feedbackMsg.innerHTML = "<strong>Validation Error:</strong> Please drag and drop or select at least one project image.";
+            feedbackBox.scrollIntoView({ behavior: 'smooth' });
+            return;
+        }
+
+        // Map uploadedFiles Base64 content for API payload
+        const imagesPayload = uploadedFiles.map(file => ({
+            name: file.name,
+            content: file.base64
+        }));
         
         const date = category === "design" ? (document.getElementById("p-date").value.trim() || "2025") : "2025";
         const timeline = category === "design" ? (document.getElementById("p-timeline").value.trim() || "N/A") : "N/A";
@@ -70,13 +164,13 @@ document.addEventListener("DOMContentLoaded", () => {
             role,
             collaborators,
             description: desc || (category === "art" ? "An original digital illustration by Ashish N Remesh." : ""),
-            images
+            images: imagesPayload
         };
         
         try {
             feedbackBox.style.display = "block";
             feedbackBox.className = "feedback-box";
-            feedbackMsg.innerHTML = "Creating project folder and metadata file...";
+            feedbackMsg.innerHTML = "Uploading files and creating project directories...";
             
             createBtn.disabled = true;
             createBtn.textContent = "CREATING...";
@@ -98,16 +192,19 @@ document.addEventListener("DOMContentLoaded", () => {
             
             const result = await response.json();
             
-            // Show premium directory placement guidance instructions
+            // Show success instructions
             feedbackBox.className = "feedback-box success";
             feedbackMsg.innerHTML = `
-                <strong>Project folder created successfully!</strong><br>
+                <strong>Project created successfully!</strong><br>
                 <span style="color:#ffffff;">Directory:</span> <code>projects/${result.slug}/</code><br>
-                <span style="color:#ffffff;">Next Step:</span> Copy your image files (naming: <code>${images.join(', ')}</code>) into that folder on your computer, then visual cards are ready to go!
+                <span style="color:#ffffff;">Uploaded:</span> <code>${imagesPayload.length} images saved directly on disk.</code><br>
+                <span style="color:#ffffff;">Success:</span> Your images are saved and card thumbnail has been added to the grid!
             `;
             
-            // Reset form controls
+            // Reset form controls & uploadedFiles list state
             form.reset();
+            uploadedFiles = [];
+            renderDroppedFiles();
             metadataFields.style.display = "block"; // restore defaults
             
             // Auto reload visual workspace so new item appears instantly in visual layout columns!
