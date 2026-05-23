@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Grid Reorder Tool Stylesheet
+   Grid Reorder & CMS Upload Tool Stylesheet
    ========================================================================== */
 
 .workspace-container {
@@ -10,6 +10,166 @@
     gap: var(--gutter);
 }
 
+/* Split Panel Layout */
+.split-workspace {
+    display: flex;
+    flex-direction: row;
+    gap: var(--gutter);
+    width: 100%;
+    flex: 1;
+}
+
+/* Left Side Panel: Admin Project Form */
+.admin-pane {
+    width: 320px;
+    flex-shrink: 0;
+    background-color: #000000;
+    border-right: 0.75px solid #ffffff;
+    padding-right: var(--gutter);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    height: calc(100vh - 140px);
+    overflow-y: auto;
+}
+
+/* Hide scrollbar but keep scrollability */
+.admin-pane::-webkit-scrollbar {
+    width: 4px;
+}
+.admin-pane::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Right Side Panel: Visual Columns */
+.grid-pane {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--gutter);
+    height: calc(100vh - 140px);
+    overflow: hidden;
+}
+
+.pane-title {
+    font-size: 13px;
+    font-weight: 300;
+    letter-spacing: var(--font-kerning);
+    border-bottom: 0.75px solid #ffffff;
+    padding-bottom: 8px;
+    color: #ffffff;
+    text-transform: uppercase;
+}
+
+/* CMS Form Elements */
+.form-group {
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-row {
+    display: flex;
+    gap: var(--gutter);
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.admin-pane label {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.4);
+    margin-bottom: 6px;
+    letter-spacing: 0.05em;
+    font-weight: 300;
+}
+
+.admin-pane input[type="text"],
+.admin-pane input[type="number"],
+.admin-pane select,
+.admin-pane textarea {
+    background-color: #000000;
+    border: 0.75px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    padding: 8px 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    font-weight: 300;
+    outline: none;
+    text-transform: uppercase;
+    border-radius: 0px; /* Sharp technical edges */
+}
+
+.admin-pane input[type="text"]::placeholder,
+.admin-pane textarea::placeholder {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+.admin-pane input[type="text"]:focus,
+.admin-pane input[type="number"]:focus,
+.admin-pane select:focus,
+.admin-pane textarea:focus {
+    border-color: #ffffff;
+}
+
+.admin-pane textarea {
+    resize: none;
+    height: 70px;
+    line-height: 1.35;
+    text-transform: none; /* Keep descriptions mixed case */
+}
+
+.create-action-btn {
+    background-color: #ffffff;
+    color: #000000;
+    border: 0.75px solid #ffffff;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    font-weight: 300;
+    padding: 10px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background-color 0.2s var(--easing), color 0.2s var(--easing);
+    margin-top: 10px;
+}
+
+.create-action-btn:hover {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+/* Feedback box for server notifications */
+.feedback-box {
+    margin-top: 10px;
+    padding: 12px;
+    border: 0.75px solid rgba(255, 255, 255, 0.2);
+    font-size: 11px;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.6);
+    display: none;
+}
+
+.feedback-box code {
+    font-family: 'DM Mono', monospace;
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 2px 4px;
+}
+
+.feedback-box.success {
+    border-color: #22c55e;
+    color: #22c55e;
+    background-color: rgba(34, 197, 94, 0.05);
+}
+
+.feedback-box.error {
+    border-color: #ef4444;
+    color: #ef4444;
+    background-color: rgba(239, 68, 68, 0.05);
+}
+
+/* Grid representation headers */
 .columns-header-grid {
     display: flex;
     width: 100%;
@@ -24,7 +184,7 @@
     color: rgba(255, 255, 255, 0.5);
     letter-spacing: var(--font-kerning);
     text-align: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    border-bottom: 0.75px solid rgba(255, 255, 255, 0.15);
     padding-bottom: 8px;
     user-select: none;
 }
@@ -46,7 +206,7 @@
     gap: var(--gutter);
     min-height: calc(100vh - 250px);
     background-color: rgba(255, 255, 255, 0.015);
-    border: 1px dashed rgba(255, 255, 255, 0.08);
+    border: 0.75px dashed rgba(255, 255, 255, 0.08);
     padding: var(--gutter);
     transition: background-color 0.2s var(--easing), border-color 0.2s var(--easing);
     overflow-y: auto;
@@ -62,7 +222,7 @@
 .drag-card-item {
     position: relative;
     background-color: #0d0d0d;
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 0.75px solid rgba(255, 255, 255, 0.12);
     padding: var(--gutter);
     cursor: grab;
     user-select: none;
@@ -88,9 +248,9 @@
     width: 44px;
     height: 44px;
     object-fit: cover;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 0.75px solid rgba(255, 255, 255, 0.15);
     flex-shrink: 0;
-    pointer-events: none; /* Prevent browser triggering image drag defaults */
+    pointer-events: none;
 }
 
 .drag-card-details {
@@ -117,11 +277,11 @@
     letter-spacing: var(--font-kerning);
 }
 
-/* Save Actions button with micro-animations */
+/* Save Actions button */
 .save-action-btn {
     background-color: #ffffff;
     color: #000000;
-    border: 1px solid #ffffff;
+    border: 0.75px solid #ffffff;
     font-family: 'DM Mono', monospace;
     font-size: var(--font-size);
     font-weight: 300;
@@ -149,7 +309,7 @@
     color: #ffffff !important;
 }
 
-/* Unsaved state alert pulses */
+/* Unsaved state alert */
 .status-indicator {
     font-size: var(--font-size);
     color: rgba(255, 255, 255, 0.4);
@@ -159,7 +319,7 @@
 }
 
 .status-indicator.unsaved {
-    color: #f59e0b; /* Warning yellow */
+    color: #f59e0b;
     animation: flashIndicator 1.5s infinite var(--easing);
 }
 
@@ -176,8 +336,28 @@
 
 /* Responsive constraints */
 @media (max-width: 767px) {
+    .split-workspace {
+        flex-direction: column;
+        gap: var(--vertical);
+    }
+    
+    .admin-pane {
+        width: 100%;
+        border-right: none;
+        border-bottom: 0.75px solid #ffffff;
+        padding-right: 0;
+        padding-bottom: var(--vertical);
+        height: auto;
+        overflow-y: visible;
+    }
+    
+    .grid-pane {
+        height: auto;
+        overflow: visible;
+    }
+
     .columns-header-grid {
-        display: none; /* Hide header slots on mobile viewports */
+        display: none;
     }
     
     .drag-workspace {

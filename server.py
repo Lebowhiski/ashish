@@ -25,6 +25,8 @@ class CMSHandler(http.server.SimpleHTTPRequestHandler):
     def do_POST(self):
         if self.path == '/api/save-layout':
             self.handle_save_layout()
+        elif self.path == '/api/create-project':
+            self.handle_create_project()
         else:
             # Fallback for unrecognized POST requests
             self.send_error(404, "Endpoint not found")
@@ -107,6 +109,88 @@ class CMSHandler(http.server.SimpleHTTPRequestHandler):
             response = {
                 "status": "error",
                 "message": f"Server failed to write files: {str(e)}"
+            }
+            self.wfile.write(json.dumps(response).encode('utf-8'))
+
+    def handle_create_project(self):
+        try:
+            content_length = int(self.headers['Content-Length'])
+            post_data = self.rfile.read(content_length)
+            payload = json.loads(post_data.decode('utf-8'))
+
+            title = payload.get('title', 'Untitled').strip()
+            slug = payload.get('slug', '').strip()
+            category = payload.get('category', 'design').strip()
+            column = payload.get('column', 1)
+            position = payload.get('position', 1)
+            date = payload.get('date', '2025').strip()
+            timeline = payload.get('timeline', 'N/A').strip()
+            role = payload.get('role', 'Designer').strip()
+            collaborators = payload.get('collaborators', 'None').strip()
+            description = payload.get('description', '').strip()
+            images = payload.get('images', [])
+
+            if not slug:
+                raise ValueError("Project slug is required")
+
+            # Clean slug to avoid directory traversal
+            slug = os.path.basename(slug.lower().replace(' ', '-').replace('/', '').replace('\\', ''))
+            
+            project_dir = os.path.join(PROJECTS_DIR, slug)
+            os.makedirs(project_dir, exist_ok=True)
+            print(f"✔ Created project directory: {project_dir}")
+
+            metadata = {
+                "title": title,
+                "category": category,
+                "column": column,
+                "position": position,
+                "date": date,
+                "timeline": timeline,
+                "role": role,
+                "collaborators": collaborators,
+                "description": description,
+                "images": images
+            }
+
+            meta_path = os.path.join(project_dir, "metadata.json")
+            with open(meta_path, 'w') as f:
+                json.dump(metadata, f, indent=2)
+            print(f"✔ Wrote metadata.json at: {meta_path}")
+
+            # Update projects.json list
+            index_list = []
+            if os.path.exists(PROJECTS_JSON):
+                with open(PROJECTS_JSON, 'r') as f:
+                    index_list = json.load(f)
+            
+            if slug not in index_list:
+                index_list.append(slug)
+                with open(PROJECTS_JSON, 'w') as f:
+                    json.dump(index_list, f, indent=2)
+                print(f"✔ Added slug '{slug}' to projects.json list.")
+
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.end_headers()
+            
+            response = {
+                "status": "success",
+                "message": "Project created successfully!",
+                "projectDir": project_dir,
+                "slug": slug
+            }
+            self.wfile.write(json.dumps(response).encode('utf-8'))
+
+        except Exception as e:
+            print(f"❌ Error creating project: {e}")
+            self.send_response(500)
+            self.send_header('Content-Type', 'application/json')
+            self.end_headers()
+            response = {
+                "status": "error",
+                "message": f"Server failed to create project: {str(e)}"
             }
             self.wfile.write(json.dumps(response).encode('utf-8'))
 

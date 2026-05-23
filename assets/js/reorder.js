@@ -1,16 +1,127 @@
-// Visual CMS Reorder Engine for Ashish NR Portfolio
-// Handles client-side drag-and-drop grid arrangements
+// Visual CMS Reorder & Creator Engine for Ashish NR Portfolio
+// Handles client-side drag-and-drop grid arrangements and direct project creation
 
 document.addEventListener("DOMContentLoaded", () => {
     let allProjects = [];
     let isChanged = false;
 
+    // DOM Elements
     const col1Bucket = document.getElementById("drag-col-1");
     const col2Bucket = document.getElementById("drag-col-2");
     const col3Bucket = document.getElementById("drag-col-3");
     
     const saveBtn = document.getElementById("save-btn");
     const statusIndicator = document.getElementById("save-status");
+
+    // Form DOM Elements
+    const form = document.getElementById("cms-form");
+    const titleInput = document.getElementById("p-title");
+    const slugInput = document.getElementById("p-slug");
+    const categorySelect = document.getElementById("p-category");
+    const metadataFields = document.getElementById("metadata-fields");
+    const feedbackBox = document.getElementById("feedback-box");
+    const feedbackMsg = document.getElementById("feedback-message");
+    const createBtn = document.getElementById("create-btn");
+
+    // Real-time Title Slugifier
+    titleInput.addEventListener("input", () => {
+        slugInput.value = titleInput.value.toLowerCase()
+            .replace(/[^a-z0-9\s-]/g, "") // remove special characters
+            .replace(/\s+/g, "-")        // replace spaces with hyphens
+            .replace(/-+/g, "-")         // replace consecutive hyphens
+            .trim();
+    });
+
+    // Dynamic Metadata Form Fields Toggle (Hide metadata when Art/Illustration category is selected)
+    categorySelect.addEventListener("change", () => {
+        if (categorySelect.value === "art") {
+            metadataFields.style.display = "none";
+        } else {
+            metadataFields.style.display = "block";
+        }
+    });
+
+    // Unified Project Creator Submission
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        
+        const title = titleInput.value.trim();
+        const slug = slugInput.value.trim();
+        const category = categorySelect.value;
+        const column = parseInt(document.getElementById("p-column").value);
+        const position = parseInt(document.getElementById("p-position").value);
+        const desc = document.getElementById("p-description").value.trim();
+        const imagesStr = document.getElementById("p-images").value;
+        const images = imagesStr.split(",").map(i => i.trim()).filter(i => i.length > 0);
+        
+        const date = category === "design" ? (document.getElementById("p-date").value.trim() || "2025") : "2025";
+        const timeline = category === "design" ? (document.getElementById("p-timeline").value.trim() || "N/A") : "N/A";
+        const role = category === "design" ? (document.getElementById("p-role").value.trim() || "Designer") : "Illustration";
+        const collaborators = category === "design" ? (document.getElementById("p-collaborators").value.trim() || "None") : "None";
+        
+        const newProjectPayload = {
+            title,
+            slug,
+            category,
+            column,
+            position,
+            date,
+            timeline,
+            role,
+            collaborators,
+            description: desc || (category === "art" ? "An original digital illustration by Ashish N Remesh." : ""),
+            images
+        };
+        
+        try {
+            feedbackBox.style.display = "block";
+            feedbackBox.className = "feedback-box";
+            feedbackMsg.innerHTML = "Creating project folder and metadata file...";
+            
+            createBtn.disabled = true;
+            createBtn.textContent = "CREATING...";
+            
+            const response = await fetch("/api/create-project", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(newProjectPayload)
+            });
+            
+            createBtn.disabled = false;
+            createBtn.textContent = "CREATE & ADD TO GRID";
+            
+            if (!response.ok) {
+                throw new Error("HTTP error creating project");
+            }
+            
+            const result = await response.json();
+            
+            // Show premium directory placement guidance instructions
+            feedbackBox.className = "feedback-box success";
+            feedbackMsg.innerHTML = `
+                <strong>Project folder created successfully!</strong><br>
+                <span style="color:#ffffff;">Directory:</span> <code>projects/${result.slug}/</code><br>
+                <span style="color:#ffffff;">Next Step:</span> Copy your image files (naming: <code>${images.join(', ')}</code>) into that folder on your computer, then visual cards are ready to go!
+            `;
+            
+            // Reset form controls
+            form.reset();
+            metadataFields.style.display = "block"; // restore defaults
+            
+            // Auto reload visual workspace so new item appears instantly in visual layout columns!
+            await loadWorkspace();
+            
+        } catch (error) {
+            console.error("Error creating project:", error);
+            feedbackBox.className = "feedback-box error";
+            feedbackMsg.innerHTML = `<strong>Error:</strong> Failed to create project. Make sure the local python server is running.`;
+            
+            createBtn.disabled = false;
+            createBtn.textContent = "CREATE & ADD TO GRID";
+        }
+    });
 
     // Retrieve full portfolio database
     async function loadWorkspace() {
@@ -36,6 +147,8 @@ document.addEventListener("DOMContentLoaded", () => {
             
             renderWorkspace();
             statusIndicator.textContent = "All changes saved";
+            statusIndicator.classList.remove("unsaved");
+            isChanged = false;
             
         } catch (e) {
             console.error("Error building workspace:", e);
@@ -97,7 +210,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const typeTag = project.category === "art" ? "ART" : "DESIGN";
         
         card.innerHTML = `
-            <img class="drag-card-thumb" src="${imagePath}" alt="${project.title}">
+            <img class="drag-card-thumb" src="${imagePath}" alt="${project.title}" onerror="this.src='assets/css/reorder.css'; this.className='drag-card-thumb placeholder'; this.outerHTML='<div class=\\'drag-card-thumb\\' style=\\'background:#1a1a1a; display:flex; align-items:center; justify-content:center; font-size:8px; color:#555; text-align:center; flex-shrink:0;\\'>NO IMG</div>';">
             <div class="drag-card-details">
                 <div class="drag-card-title">${project.title}</div>
                 <div class="drag-card-meta">${typeTag} / COL ${project.column} / POS ${project.position || 0}</div>
@@ -133,7 +246,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function handleDragEnd() {
         this.classList.remove("dragging");
-        // Update column descriptions dynamically inside cards
         updateCardsVisualMetadata();
     }
 
