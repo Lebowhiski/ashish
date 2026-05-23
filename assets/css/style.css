@@ -179,6 +179,17 @@ a:hover {
     user-select: none;
     margin: 0 6px;
     /* Tightly constrained spacing */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+}
+
+.filter-glyph {
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .nav-right {
