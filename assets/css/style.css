@@ -260,7 +260,7 @@ a:hover {
 }
 
 .card-item:hover .card-media {
-    opacity: 0.75;
+    opacity: 0.9;
 }
 
 /* Left-Aligned Technical Text Overlay on Hover */
@@ -297,14 +297,19 @@ a:hover {
     text-transform: uppercase;
 }
 
-/* Centered Hover Category Indicator Glyphs */
+.card-title-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+/* Hover Category Indicator Glyphs Aligned in Title Row */
 .card-hover-glyph {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    height: 80px;
+    height: var(--font-size);
     width: auto;
+    object-fit: contain;
     pointer-events: none;
 }
 
