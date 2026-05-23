@@ -583,7 +583,7 @@ footer {
     .masonry-container {
         flex-direction: column;
         gap: var(--gutter);
-        padding-top: 90px;
+        padding-top: calc(var(--font-size) + 2 * var(--pageMarginTotal) + var(--vertical));
     }
 
     .masonry-column {
@@ -591,29 +591,38 @@ footer {
         gap: var(--gutter);
     }
 
-    /* Nav stack on mobile */
+    /* Mobile Nav: Single Line Row Layout */
     .nav-container {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
-        padding-bottom: 12px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0;
+        padding-bottom: var(--pageMarginTotal);
     }
 
     .nav-center {
-        position: relative;
-        left: 0;
-        height: auto;
-        margin-top: 6px;
-        margin-bottom: 6px;
+        position: absolute;
+        left: 45%;
+        transform: translateX(-50%);
+        top: 0;
+        height: calc(100% - var(--pageMarginTotal));
+        display: flex;
+        align-items: center;
+        margin: 0;
     }
 
     .nav-right {
-        margin-top: 6px;
+        margin-top: 0;
+    }
+
+    .filter-separator,
+    .nav-slash {
+        margin: 0 4px;
     }
 
     .project-header-grid {
         flex-direction: column;
-        padding-top: 110px;
+        padding-top: calc(var(--font-size) + 2 * var(--pageMarginTotal) + var(--vertical));
         gap: var(--vertical);
     }
 
