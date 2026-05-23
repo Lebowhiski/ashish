@@ -26,8 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Dynamic Viewport Breakpoint Resolver
     function getDesiredColumns() {
         const width = window.innerWidth;
-        if (width >= 1024) return 4;
-        if (width >= 768) return 3;
+        if (width >= 768) return 4;
         return 1;
     }
 
@@ -115,8 +114,6 @@ document.addEventListener("DOMContentLoaded", () => {
             let targetColIndex = 0;
             if (N === 4) {
                 targetColIndex = col - 1;
-            } else if (N === 3) {
-                targetColIndex = (col - 1) % 3;
             } else { // N === 1
                 targetColIndex = 0;
             }
