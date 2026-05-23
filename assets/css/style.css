@@ -116,8 +116,8 @@ a:hover {
 /* Offcentered Filter Bar Aligned Exactly with Column 3 */
 .nav-center {
     position: absolute;
-    /* Aligns exactly at the left edge of Column 3 in a 3-column layout */
-    left: calc(2 * ((100% - 2 * var(--gutter)) / 3) + 2 * var(--gutter) + var(--pageMarginTotal));
+    /* Aligns exactly at the left edge of Column 3 in a 4-column layout */
+    left: calc(2 * ((100% - 3 * var(--gutter)) / 4) + 2 * var(--gutter) + var(--pageMarginTotal));
     top: 0;
     height: calc(100% - var(--pageMarginTotal));
     display: flex;
