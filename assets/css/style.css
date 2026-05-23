@@ -603,7 +603,7 @@ footer {
     .nav-center {
         position: absolute;
         left: auto;
-        right: calc(var(--pageMarginTotal) + 60px);
+        right: calc(var(--pageMarginTotal) + 80px);
         transform: none;
         top: 0;
         height: calc(100% - var(--pageMarginTotal));
