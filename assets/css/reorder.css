@@ -277,6 +277,8 @@
     flex-direction: row;
     gap: var(--gutter);
     width: 100%;
+    height: calc(100% - 40px); /* Restrict to remaining pane height */
+    min-height: 0;              /* Allow internal scrolling without container expansion */
     flex: 1;
     padding-bottom: var(--vertical);
 }
@@ -287,12 +289,13 @@
     display: flex;
     flex-direction: column;
     gap: var(--gutter);
-    min-height: calc(100vh - 250px);
+    height: 100%;               /* Fill workspace height exactly */
+    min-height: 0;              /* Enable browser internal scrolling triggers */
     background-color: rgba(255, 255, 255, 0.015);
     border: 0.75px dashed rgba(255, 255, 255, 0.08);
     padding: var(--gutter);
     transition: background-color 0.2s var(--easing), border-color 0.2s var(--easing);
-    overflow-y: auto;
+    overflow-y: auto;           /* Triggers internal scrollbars */
 }
 
 /* Drag Over Highlight States */
