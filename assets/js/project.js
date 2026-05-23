@@ -13,7 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const titleEl = document.getElementById("project-title");
     const descEl = document.getElementById("project-description");
-    const metaEl = document.getElementById("project-meta-list");
     const mediaEl = document.getElementById("project-media-list");
 
     // Fetch and populate page content
@@ -36,35 +35,55 @@ document.addEventListener("DOMContentLoaded", () => {
             // 3. Populate Description paragraph (Column 2)
             descEl.textContent = project.description || "No description provided.";
 
-            // 4. Populate Metadata list (Column 3)
-            const metaItems = [
-                { label: "Date", value: project.date },
-                { label: "Timeline", value: project.timeline },
-                { label: "Role", value: project.role },
-                { label: "Collaborators", value: project.collaborators }
-            ];
+            // 4. Populate Metadata list (Column 4)
+            const col3El = document.getElementById("project-meta-col-3");
+            const col4El = document.getElementById("project-meta-col-4");
 
-            metaEl.innerHTML = "";
-            metaItems.forEach(item => {
-                if (item.value && item.value !== "N/A" && item.value !== "None" && item.value !== "Unknown") {
-                    const li = document.createElement("div");
-                    li.className = "meta-item";
-                    li.innerHTML = `
-                        <span class="meta-label">${item.label}:</span>
-                        <span class="meta-value">${item.value}</span>
-                    `;
-                    metaEl.appendChild(li);
-                } else if (item.label === "Collaborators" || item.label === "Role" || item.label === "Date") {
-                    // Always show core items with fallback values
-                    const li = document.createElement("div");
-                    li.className = "meta-item";
-                    li.innerHTML = `
-                        <span class="meta-label">${item.label}:</span>
-                        <span class="meta-value">${item.value || "None"}</span>
-                    `;
-                    metaEl.appendChild(li);
-                }
-            });
+            if (col4El) {
+                if (col3El) col3El.innerHTML = ""; // keep Column 3 empty for whitespace
+                col4El.innerHTML = "";
+
+                const dateVal = project.date || "N/A";
+                const timelineVal = project.timeline || "N/A";
+                const roleVal = project.role || "Designer";
+                const collaboratorVal = project.collaborators || project.collaborator || "None";
+
+                // Date
+                const dateItem = document.createElement("div");
+                dateItem.className = "meta-item";
+                dateItem.innerHTML = `
+                    <span class="meta-label">DATE:</span>
+                    <span class="meta-value">${dateVal}</span>
+                `;
+                col4El.appendChild(dateItem);
+
+                // Timeline
+                const timelineItem = document.createElement("div");
+                timelineItem.className = "meta-item";
+                timelineItem.innerHTML = `
+                    <span class="meta-label">TIMELINE:</span>
+                    <span class="meta-value">${timelineVal}</span>
+                `;
+                col4El.appendChild(timelineItem);
+
+                // Role
+                const roleItem = document.createElement("div");
+                roleItem.className = "meta-item";
+                roleItem.innerHTML = `
+                    <span class="meta-label">ROLE:</span>
+                    <span class="meta-value">${roleVal}</span>
+                `;
+                col4El.appendChild(roleItem);
+
+                // Collaborator
+                const collaboratorItem = document.createElement("div");
+                collaboratorItem.className = "meta-item";
+                collaboratorItem.innerHTML = `
+                    <span class="meta-label">COLABORATOR:</span>
+                    <span class="meta-value">${collaboratorVal}</span>
+                `;
+                col4El.appendChild(collaboratorItem);
+            }
 
             // 5. Stack Project Images vertically below, aligned with Column 2
             mediaEl.innerHTML = "";

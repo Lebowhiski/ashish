@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grid Reorder Manager - Ashish NR</title>
+    <meta name="description" content="Visual Drag & Drop Grid Layout Manager for Ashish NR Portfolio">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/reorder.css">
+</head>
+<body>
+
+    <!-- Sticky Dashboard Header -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <div class="nav-left">
+                <a href="index.html" class="nav-brand">ASHISH NR / GRID REORDER MANAGER</a>
+            </div>
+            <div class="nav-right">
+                <span id="save-status" class="status-indicator">All changes saved</span>
+                <span class="nav-spacer-gap" style="width: 25px;"></span>
+                <button id="save-btn" class="save-action-btn">SAVE LAYOUT</button>
+                <span class="nav-spacer-gap" style="width: 25px;"></span>
+                <a href="index.html" class="social-link">← BACK TO SITE</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Workspace Container -->
+    <main class="container workspace-container">
+        <div class="columns-header-grid">
+            <div class="column-header">COLUMN 1</div>
+            <div class="column-header">COLUMN 2</div>
+            <div class="column-header">COLUMN 3</div>
+        </div>
+        
+        <div class="columns drag-workspace">
+            <!-- Column 1 bucket -->
+            <div id="drag-col-1" class="drag-column-bucket" data-column="1">
+                <!-- Loaded dynamically by reorder.js -->
+            </div>
+            
+            <!-- Column 2 bucket -->
+            <div id="drag-col-2" class="drag-column-bucket" data-column="2">
+                <!-- Loaded dynamically by reorder.js -->
+            </div>
+            
+            <!-- Column 3 bucket -->
+            <div id="drag-col-3" class="drag-column-bucket" data-column="3">
+                <!-- Loaded dynamically by reorder.js -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Sticky Footer -->
+    <footer>
+        <div class="footer-container">
+            <span>Visual CMS System / 2026</span>
+            <span class="footer-note">DRAG CARDS VERTICALLY OR HORIZONTALLY TO EDIT THE HOME GRID ORDER</span>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="assets/js/reorder.js"></script>
+</body>
+</html>

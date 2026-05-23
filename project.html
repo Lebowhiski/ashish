@@ -17,9 +17,6 @@
             <div class="nav-left">
                 <a href="index.html" class="nav-brand">ASHISH NR</a>
             </div>
-            <div class="nav-center">
-                <!-- Kept empty on detail pages to maintain focus on content -->
-            </div>
             <div class="nav-right">
                 <a href="https://www.instagram.com/ash.ishnr/" target="_blank" class="social-link">IN</a>
                 <span class="nav-slash">/</span>
@@ -30,29 +27,28 @@
 
     <!-- Main Editorial Project Page Content -->
     <main class="container">
-        <!-- Asymmetrical Column Grid Layout (Matches Framer) -->
+        <!-- Asymmetrical 4-Column Grid Layout (Matches the project screenshot) -->
         <section class="project-header-grid">
-            <!-- Column 1: Floating Title Side Column -->
-            <div class="project-col project-col-left">
+            <!-- Column 1: Floating Title Column -->
+            <div class="project-col project-col-1">
                 <h1 id="project-title" class="project-fixed-title">Project Title</h1>
             </div>
             
             <!-- Column 2: Detailed Description Column -->
-            <div class="project-col project-col-middle">
+            <div class="project-col project-col-2">
                 <p id="project-description">
                     Loading project description...
                 </p>
             </div>
             
-            <!-- Column 3: Timeline & Meta Data List Column -->
-            <div class="project-col project-col-right">
-                <div id="project-meta-list">
-                    <!-- Loaded dynamically by project.js -->
-                    <div class="meta-item">
-                        <span class="meta-label">Date:</span>
-                        <span class="meta-value">...</span>
-                    </div>
-                </div>
+            <!-- Column 3: Date & Timeline Column -->
+            <div class="project-col project-col-3" id="project-meta-col-3">
+                <!-- Loaded dynamically by project.js -->
+            </div>
+            
+            <!-- Column 4: Role & Collaborator Column -->
+            <div class="project-col project-col-4" id="project-meta-col-4">
+                <!-- Loaded dynamically by project.js -->
             </div>
         </section>
 

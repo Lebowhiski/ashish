@@ -1,0 +1,191 @@
+/* ==========================================================================
+   Grid Reorder Tool Stylesheet
+   ========================================================================== */
+
+.workspace-container {
+    padding-top: calc(var(--font-size) + 2 * var(--pageMarginTotal) + var(--vertical));
+    min-height: calc(100vh - 100px);
+    display: flex;
+    flex-direction: column;
+    gap: var(--gutter);
+}
+
+.columns-header-grid {
+    display: flex;
+    width: 100%;
+    margin-top: 10px;
+    padding: 0;
+    gap: var(--gutter);
+}
+
+.column-header {
+    flex: 1;
+    font-size: var(--font-size);
+    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: var(--font-kerning);
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    padding-bottom: 8px;
+    user-select: none;
+}
+
+.drag-workspace {
+    display: flex;
+    flex-direction: row;
+    gap: var(--gutter);
+    width: 100%;
+    flex: 1;
+    padding-bottom: var(--vertical);
+}
+
+/* Droppable Column Buckets */
+.drag-column-bucket {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--gutter);
+    min-height: calc(100vh - 250px);
+    background-color: rgba(255, 255, 255, 0.015);
+    border: 1px dashed rgba(255, 255, 255, 0.08);
+    padding: var(--gutter);
+    transition: background-color 0.2s var(--easing), border-color 0.2s var(--easing);
+    overflow-y: auto;
+}
+
+/* Drag Over Highlight States */
+.drag-column-bucket.drag-over {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Grabable Card Item representation */
+.drag-card-item {
+    position: relative;
+    background-color: #0d0d0d;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    padding: var(--gutter);
+    cursor: grab;
+    user-select: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    transition: opacity 0.2s var(--easing), border-color 0.2s var(--easing);
+}
+
+.drag-card-item:hover {
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* While active dragging in-air */
+.drag-card-item.dragging {
+    opacity: 0.35;
+    border-color: rgba(255, 255, 255, 0.6);
+    cursor: grabbing;
+}
+
+.drag-card-thumb {
+    width: 44px;
+    height: 44px;
+    object-fit: cover;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    flex-shrink: 0;
+    pointer-events: none; /* Prevent browser triggering image drag defaults */
+}
+
+.drag-card-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    pointer-events: none;
+}
+
+.drag-card-title {
+    font-size: var(--font-size);
+    color: #ffffff;
+    font-weight: 300;
+    letter-spacing: var(--font-kerning);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.drag-card-meta {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.45);
+    letter-spacing: var(--font-kerning);
+}
+
+/* Save Actions button with micro-animations */
+.save-action-btn {
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #ffffff;
+    font-family: 'DM Mono', monospace;
+    font-size: var(--font-size);
+    font-weight: 300;
+    padding: 3px 12px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background-color 0.2s var(--easing), color 0.2s var(--easing), border-color 0.2s var(--easing);
+}
+
+.save-action-btn:hover {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.save-action-btn.saving {
+    background-color: #555555 !important;
+    border-color: #555555 !important;
+    color: #ffffff !important;
+    cursor: not-allowed;
+}
+
+.save-action-btn.success {
+    background-color: #22c55e !important;
+    border-color: #22c55e !important;
+    color: #ffffff !important;
+}
+
+/* Unsaved state alert pulses */
+.status-indicator {
+    font-size: var(--font-size);
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: var(--font-kerning);
+    text-transform: uppercase;
+    transition: color 0.2s var(--easing);
+}
+
+.status-indicator.unsaved {
+    color: #f59e0b; /* Warning yellow */
+    animation: flashIndicator 1.5s infinite var(--easing);
+}
+
+.footer-note {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 11px;
+}
+
+@keyframes flashIndicator {
+    0% { opacity: 0.5; }
+    50% { opacity: 1.0; }
+    100% { opacity: 0.5; }
+}
+
+/* Responsive constraints */
+@media (max-width: 767px) {
+    .columns-header-grid {
+        display: none; /* Hide header slots on mobile viewports */
+    }
+    
+    .drag-workspace {
+        flex-direction: column;
+        gap: var(--vertical);
+    }
+    
+    .drag-column-bucket {
+        min-height: 300px;
+    }
+}
