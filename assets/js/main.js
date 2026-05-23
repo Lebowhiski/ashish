@@ -152,10 +152,14 @@ document.addEventListener("DOMContentLoaded", () => {
             const imageFilename = hasImages ? project.images[0] : "";
             const imagePath = imageFilename ? `projects/${project.slug}/${imageFilename}` : "assets/images/placeholder.jpg";
             
-            // Construct inner structure with dimming hover overlay
+            const isDesign = project.category === "design";
+            const glyphFilename = isDesign ? "glyph2.svg" : "glyph3.svg";
+            
+            // Construct inner structure with dimming hover overlay and category glyph
             card.innerHTML = `
                 <img class="card-media" src="${imagePath}" alt="${project.title}" loading="lazy">
                 <div class="card-overlay">
+                    <img class="card-hover-glyph" src="assets/${glyphFilename}" alt="${project.category} symbol">
                     <h3 class="card-title">${project.title}</h3>
                 </div>
             `;
