@@ -22,6 +22,14 @@ class CMSHandler(http.server.SimpleHTTPRequestHandler):
         rel_path = os.path.relpath(path, os.getcwd())
         return os.path.join(BASE_DIR, rel_path)
 
+    def end_headers(self):
+        # Prevent caching for JSON files so metadata/image list changes are reflected instantly
+        if self.path.endswith('.json'):
+            self.send_header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+            self.send_header('Pragma', 'no-cache')
+            self.send_header('Expires', '0')
+        super().end_headers()
+
     def do_POST(self):
         if self.path == '/api/save-layout':
             self.handle_save_layout()
@@ -154,13 +162,34 @@ class CMSHandler(http.server.SimpleHTTPRequestHandler):
                         base64_data = img_content
                     
                     import base64
+                    import io
+                    from PIL import Image, ImageOps
                     try:
                         file_bytes = base64.b64decode(base64_data)
-                        img_path = os.path.join(project_dir, img_name)
-                        with open(img_path, 'wb') as img_f:
-                            img_f.write(file_bytes)
-                        print(f"✔ Saved dropped image file: {img_path}")
-                        images_list.append(img_name)
+                        base, ext = os.path.splitext(img_name)
+                        
+                        if ext.lower() in ['.jpg', '.jpeg', '.png']:
+                            webp_name = base + ".webp"
+                            img_path = os.path.join(project_dir, webp_name)
+                            try:
+                                with Image.open(io.BytesIO(file_bytes)) as img_obj:
+                                    img_obj = ImageOps.exif_transpose(img_obj)
+                                    img_obj.save(img_path, 'WEBP', quality=80)
+                                print(f"✔ Converted and saved WebP image: {img_path}")
+                                images_list.append(webp_name)
+                            except Exception as pil_err:
+                                print(f"⚠ PIL processing failed, falling back to original save: {pil_err}")
+                                img_path = os.path.join(project_dir, img_name)
+                                with open(img_path, 'wb') as img_f:
+                                    img_f.write(file_bytes)
+                                images_list.append(img_name)
+                        else:
+                            # Not a typical image extension, save as is
+                            img_path = os.path.join(project_dir, img_name)
+                            with open(img_path, 'wb') as img_f:
+                                img_f.write(file_bytes)
+                            print(f"✔ Saved non-image file: {img_path}")
+                            images_list.append(img_name)
                     except Exception as img_err:
                         print(f"❌ Failed to decode/save image {img_name}: {img_err}")
                 elif isinstance(img, str):

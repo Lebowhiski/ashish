@@ -4,6 +4,16 @@ document.addEventListener("DOMContentLoaded", () => {
     let allProjects = [];
     let currentFilter = "all";
     
+    // Determine active filter from page URL
+    const path = window.location.pathname;
+    if (path.includes("design.html")) {
+        currentFilter = "design";
+    } else if (path.includes("art.html")) {
+        currentFilter = "art";
+    } else {
+        currentFilter = "all";
+    }
+    
     // Lightbox state variables
     let activeIllustrations = [];
     let currentLightboxIdx = -1;
@@ -235,22 +245,13 @@ document.addEventListener("DOMContentLoaded", () => {
         updateLightboxContent();
     }
 
-    // Event Handlers for Filters
-    function setActiveFilter(filter, activeBtn) {
-        currentFilter = filter;
-        
-        // Update active class on buttons
-        [filterBtnAll, filterBtnDesign, filterBtnArt].forEach(btn => {
-            if (btn) btn.classList.remove("active");
-        });
-        activeBtn.classList.add("active");
-        
-        renderGrid();
-    }
-
-    if (filterBtnAll) filterBtnAll.addEventListener("click", () => setActiveFilter("all", filterBtnAll));
-    if (filterBtnDesign) filterBtnDesign.addEventListener("click", () => setActiveFilter("design", filterBtnDesign));
-    if (filterBtnArt) filterBtnArt.addEventListener("click", () => setActiveFilter("art", filterBtnArt));
+    // Set active link visually based on currentFilter
+    [filterBtnAll, filterBtnDesign, filterBtnArt].forEach(btn => {
+        if (btn) btn.classList.remove("active");
+    });
+    if (currentFilter === "all" && filterBtnAll) filterBtnAll.classList.add("active");
+    if (currentFilter === "design" && filterBtnDesign) filterBtnDesign.classList.add("active");
+    if (currentFilter === "art" && filterBtnArt) filterBtnArt.classList.add("active");
 
     // Lightbox Event Listeners
     if (lightboxClose) lightboxClose.addEventListener("click", closeLightbox);
